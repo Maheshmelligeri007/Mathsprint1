@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#080b14">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MathSprint — Square & Cube Practice</title>
+<style>
+:root{--bg:#080b14;--card:#111827cc;--line:#263247;--text:#f7f9fc;--muted:#9ba7ba;--accent:#7c5cff;--accent2:#19c6a6;--danger:#ff647c}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at 15% 10%,#20204a 0,transparent 34%),radial-gradient(circle at 90% 90%,#063b3c 0,transparent 32%),var(--bg);color:var(--text);display:flex;justify-content:center}
+.app{width:min(980px,100%);padding:28px 18px 40px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.brand{font-weight:850;letter-spacing:-.8px;font-size:25px}.brand span{color:var(--accent)}.pill{border:1px solid var(--line);background:#ffffff08;padding:8px 12px;border-radius:999px;color:var(--muted);font-size:13px}
+.hero{text-align:center;margin:38px auto 30px;max-width:720px}.eyebrow{text-transform:uppercase;letter-spacing:2px;color:#9e90ff;font-size:12px;font-weight:800}.hero h1{font-size:clamp(38px,7vw,68px);line-height:.98;margin:12px 0;background:linear-gradient(100deg,#fff,#b8b4ff);-webkit-background-clip:text;color:transparent}.hero p{color:var(--muted);font-size:16px}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.mode{border:1px solid var(--line);background:linear-gradient(145deg,#141b2bcc,#0d1320cc);border-radius:22px;padding:20px;text-align:left;color:var(--text);cursor:pointer;transition:.2s;min-height:150px}.mode:hover{transform:translateY(-3px);border-color:#5551a5}.mode.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 16px 45px #0005}.icon{font-size:26px}.mode h3{margin:14px 0 5px}.mode p{margin:0;color:var(--muted);font-size:13px}
+.panel{margin-top:18px;border:1px solid var(--line);border-radius:28px;background:#0e1522dd;box-shadow:0 25px 70px #0006;padding:28px}.stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.stat{padding:9px 13px;border-radius:12px;background:#ffffff06;color:var(--muted);font-size:13px}.stat b{color:var(--text)}
+.question{text-align:center;padding:35px 10px 20px}.label{color:var(--muted);font-size:14px}.problem{font-size:clamp(46px,10vw,78px);font-weight:850;letter-spacing:-2px;margin:14px 0 24px}.answer{display:flex;gap:10px;max-width:500px;margin:auto}.answer input{flex:1;min-width:0;border:1px solid var(--line);background:#080d17;color:white;border-radius:15px;padding:16px;font-size:22px;text-align:center;outline:none}.answer input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #7c5cff22}.btn{border:0;border-radius:15px;padding:0 22px;background:linear-gradient(135deg,var(--accent),#9b75ff);color:white;font-weight:800;font-size:15px;cursor:pointer}.btn.secondary{background:#ffffff0a;border:1px solid var(--line)}.feedback{text-align:center;min-height:27px;margin-top:16px;font-weight:700}.good{color:var(--accent2)}.bad{color:var(--danger)}.controls{display:flex;justify-content:center;gap:10px;margin-top:18px}.progress{height:7px;background:#ffffff0a;border-radius:99px;overflow:hidden;margin-top:22px}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.3s}
+@media(max-width:700px){.modes{grid-template-columns:1fr}.mode{min-height:auto}.panel{padding:20px}.answer{flex-direction:column}.btn{height:54px}.top{margin-bottom:10px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="top"><div class="brand">Math<span>Sprint</span></div><div class="pill">Mental Math Trainer</div></header>
+<section class="hero"><div class="eyebrow">Train • Think • Master</div><h1>Make math automatic.</h1><p>Fast, focused practice for squares and cubes. Pick a challenge and start solving.</p></section>
+
+<section class="modes">
+<button class="mode active" data-mode="s25"><div class="icon">²</div><h3>Squares 1–25</h3><p>Random squares from 1 through 25.</p></button>
+<button class="mode" data-mode="s30"><div class="icon">▣²</div><h3>Squares 1–30</h3><p>Level up with numbers up to 30.</p></button>
+<button class="mode" data-mode="c10"><div class="icon">³</div><h3>Cubes 1–10</h3><p>Master cubes from 1 through 10.</p></button>
+</section>
+
+<section class="panel">
+<div class="stats">
+<div class="stat">Mode: <b id="modeName">Squares 1–25</b></div>
+<div class="stat">Score: <b id="score">0</b></div>
+<div class="stat">Streak: <b id="streak">0</b> 🔥</div>
+</div>
+<div class="question"><div class="label" id="prompt">What is the square of</div><div class="problem"><span id="num">7</span><sup id="power">2</sup>?</div>
+<div class="answer"><input id="answer" type="number" inputmode="numeric" autocomplete="off" placeholder="Type your answer"><button class="btn" id="check">Check</button></div>
+<div class="feedback" id="feedback"></div>
+<div class="controls"><button class="btn secondary" id="skip">Skip</button><button class="btn" id="next">New Question</button></div>
+<div class="progress"><div class="bar" id="bar"></div></div></div>
+</section>
+</main>
+<script>
+const modes={s25:{name:"Squares 1–25",max:25,power:2},s30:{name:"Squares 1–30",max:30,power:2},c10:{name:"Cubes 1–10",max:10,power:3}};
+let current=modes.s25, n=7, score=0, streak=0, answered=false, total=0;
+const $=id=>document.getElementById(id);
+function nextQ(){n=Math.floor(Math.random()*current.max)+1; answered=false; $("num").textContent=n;$("power").textContent=current.power;$("answer").value="";$("feedback").textContent="";$("feedback").className="feedback";$("answer").focus();}
+function setMode(key){current=modes[key];document.querySelectorAll(".mode").forEach(x=>x.classList.toggle("active",x.dataset.mode===key));$("modeName").textContent=current.name;$("score").textContent=score;$("streak").textContent=streak;nextQ();}
+function check(){if(answered)return;let val=Number($("answer").value);if($("answer").value==="")return;answered=true;total++;let correct=n**current.power;if(val===correct){score++;streak++;$("feedback").textContent="✓ Correct! Excellent work.";$("feedback").className="feedback good"}else{streak=0;$("feedback").textContent=`Not quite — the answer is ${correct}.`;$("feedback").className="feedback bad"}$("score").textContent=score;$("streak").textContent=streak;$("bar").style.width=(Math.min(total%10,10)*10)+"%";}
+document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));$("check").onclick=check;$("next").onclick=nextQ;$("skip").onclick=()=>{streak=0;$("streak").textContent=streak;nextQ()};$("answer").addEventListener("keydown",e=>{if(e.key==="Enter")check()});nextQ();
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js"));
+}
+</script>
+</body>
+</html>
